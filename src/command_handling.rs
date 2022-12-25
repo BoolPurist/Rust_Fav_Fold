@@ -116,6 +116,7 @@ pub fn set_favorite_data(name: &str, path: &str) -> Result<(), Box<dyn Error>> {
 
 fn pad_from_right(to_pad: &str, max_width: usize) -> String {
     let actual_len = to_pad.len();
+
     assert!(actual_len <= max_width);
 
     let diff = max_width - actual_len;

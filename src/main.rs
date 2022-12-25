@@ -55,10 +55,12 @@ fn handle_subcommand(sub_commands: &Subcommands) {
 
     fn put_into_clipboard_or_print(content: &str, clipboard: bool) {
         if clipboard {
-            put_into_clipboard(content);
+            if let Err(clip_error) = put_into_clipboard(content) {
+                exit_with_error(&*clip_error)
+            }
         } else {
             println!("{content}")
-        }
+        };
     }
 }
 
@@ -68,7 +70,9 @@ fn exit_with_error(message: &dyn Error) {
     std::process::exit(1);
 }
 
-fn put_into_clipboard(content: &str) {
-    let mut clipboard = Clipboard::new().unwrap();
-    clipboard.set_text(content).unwrap();
+fn put_into_clipboard(content: &str) -> Result<(), Box<dyn Error>> {
+    let mut clipboard = Clipboard::new()?;
+    clipboard.set_text(content)?;
+
+    Ok(())
 }
