@@ -1,28 +1,29 @@
 use std::error::Error;
 
-use arboard::Clipboard;
 use clap::Parser;
 use colored::*;
-use folder_favorite::cli_args::MainCommand;
-use folder_favorite::cli_args::Subcommands;
-use folder_favorite::command_handling;
+
+use folder_favorite::{cli_args::Commands, command_handling, linux_clipboard};
 
 fn main() {
-    let args = MainCommand::parse();
+    if let Err(error) = linux_clipboard::execute_as_possible_deamon_clipboard() {
+        exit_with_error(&*error);
+    }
 
-    handle_subcommand(&args.sub_commands);
+    let args = Commands::parse();
+    handle_subcommand(&args);
 }
 
-fn handle_subcommand(sub_commands: &Subcommands) {
+fn handle_subcommand(sub_commands: &Commands) {
     return match sub_commands {
-        Subcommands::Set {
+        Commands::Set {
             name_favorite,
             new_path,
         } => match command_handling::set_favorite_data(&name_favorite, &new_path) {
             Ok(_) => (),
             Err(error) => exit_with_error(&*error),
         },
-        Subcommands::Get { name, clipboard } => match name {
+        Commands::Get { name, clipboard } => match name.as_ref() {
             Some(get_name) => {
                 let favorite = command_handling::get_fav(&get_name);
 
@@ -38,13 +39,13 @@ fn handle_subcommand(sub_commands: &Subcommands) {
                 Err(error) => exit_with_error(&*error),
             },
         },
-        Subcommands::Delete { name_favorite } => {
+        Commands::Delete { name_favorite } => {
             match command_handling::remove_from_fav(name_favorite) {
                 Ok(_) => (),
                 Err(error) => exit_with_error(&*error),
             }
         }
-        Subcommands::Rename {
+        Commands::Rename {
             old_name_favorite,
             new_name_favorite,
         } => match command_handling::rename_fav(&old_name_favorite, &new_name_favorite) {
@@ -55,7 +56,7 @@ fn handle_subcommand(sub_commands: &Subcommands) {
 
     fn put_into_clipboard_or_print(content: &str, clipboard: bool) {
         if clipboard {
-            if let Err(clip_error) = put_into_clipboard(content) {
+            if let Err(clip_error) = linux_clipboard::put_into_clipboard(content) {
                 exit_with_error(&*clip_error)
             }
         } else {
@@ -68,11 +69,4 @@ fn exit_with_error(message: &dyn Error) {
     let red_msg = format!("Error: {message}").red().to_string();
     eprint!("{red_msg}");
     std::process::exit(1);
-}
-
-fn put_into_clipboard(content: &str) -> Result<(), Box<dyn Error>> {
-    let mut clipboard = Clipboard::new()?;
-    clipboard.set_text(content)?;
-
-    Ok(())
 }

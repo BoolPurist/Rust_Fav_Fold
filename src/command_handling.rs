@@ -101,7 +101,7 @@ pub fn get_all_fav_table(for_clipboard: bool) -> Result<String, Box<dyn Error>> 
 pub fn set_favorite_data(name: &str, path: &str) -> Result<(), Box<dyn Error>> {
     let mut records = file_data::get_favorites()?;
 
-    let new_path = FavoriteFolderPath::new(name, &PathBuf::from(path));
+    let new_path = FavoriteFolderPath::new(name, &PathBuf::from(path))?;
     match find_by_name(&records, name) {
         Some(index) => {
             records[index] = new_path;
