@@ -6,7 +6,7 @@ use colored::*;
 use folder_favorite::{cli_args::Commands, command_handling, linux_clipboard};
 
 fn main() {
-    if let Err(error) = linux_clipboard::execute_as_possible_deamon_clipboard() {
+    if let Err(error) = linux_clipboard::execute_as_possible_daemon_clipboard() {
         exit_with_error(&*error);
     }
 
