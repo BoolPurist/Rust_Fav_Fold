@@ -9,10 +9,11 @@ Functionality only confirmed under Linux with the distribution Fedora so far.
 
 ## Installation
 
-1. Install rust
-2. Clone this repository 
-3. Go into repository 
+1. Install rust like described here (Link)[https://www.rust-lang.org/tools/install]
+2. Clone this repository  via git clone
+3. Go into clone repository 
 4. Execute the following command
+5. You might need to restart your shell so the command "folder_favorite" is available.
 
 ```
 cargo install --bin folder_favorite --path "."
