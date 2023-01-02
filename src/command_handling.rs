@@ -1,12 +1,10 @@
 use crate::favorite_folder_record::FavoriteFolderPath;
-use crate::file_data;
+use crate::{file_data, AppResult};
 use colored::*;
 use std::env;
 use std::error::Error;
 use std::fmt::Display;
-use std::io;
 use std::path::PathBuf;
-
 type Favorites = Vec<FavoriteFolderPath>;
 
 #[derive(Debug)]
@@ -20,7 +18,7 @@ impl Display for AppArgError {
 
 impl Error for AppArgError {}
 
-pub fn get_fav(name: &str) -> Result<FavoriteFolderPath, Box<dyn Error>> {
+pub fn get_fav(name: &str) -> AppResult<FavoriteFolderPath> {
     let records = file_data::get_favorites()?;
 
     let found = records
@@ -34,7 +32,7 @@ pub fn get_fav(name: &str) -> Result<FavoriteFolderPath, Box<dyn Error>> {
     Ok(found)
 }
 
-pub fn rename_fav(name: &str, new_name: &str) -> Result<(), Box<dyn Error>> {
+pub fn rename_fav(name: &str, new_name: &str) -> AppResult {
     let mut records = file_data::get_favorites()?;
 
     let found = records
@@ -53,7 +51,7 @@ pub fn rename_fav(name: &str, new_name: &str) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn remove_from_fav(name: &str) -> Result<(), Box<dyn Error>> {
+pub fn remove_from_fav(name: &str) -> AppResult {
     let mut records = file_data::get_favorites()?;
     match find_by_name(&records, name) {
         Some(to_delete) => {
@@ -67,7 +65,7 @@ pub fn remove_from_fav(name: &str) -> Result<(), Box<dyn Error>> {
         )))?,
     }
 }
-pub fn get_all_fav_table(for_clipboard: bool) -> Result<String, Box<dyn Error>> {
+pub fn get_all_fav_table(for_clipboard: bool) -> AppResult<String> {
     let records = file_data::get_favorites()?;
 
     let max_width = records
@@ -100,7 +98,7 @@ pub fn get_all_fav_table(for_clipboard: bool) -> Result<String, Box<dyn Error>> 
     }
 }
 
-pub fn set_favorite_data(name: &str, path: &str) -> Result<(), Box<dyn Error>> {
+pub fn set_favorite_data(name: &str, path: &str) -> AppResult {
     let mut records = file_data::get_favorites()?;
 
     let new_path = FavoriteFolderPath::new(name, &PathBuf::from(path))?;
@@ -133,7 +131,7 @@ fn find_by_name(records: &Favorites, name: &str) -> Option<usize> {
     records.iter().position(|fav| fav.get_name() == name)
 }
 
-pub fn set_label_to_cwd(name: &str) -> Result<(), Box<dyn Error>> {
+pub fn set_label_to_cwd(name: &str) -> AppResult {
     let cwd = env::current_dir()?;
     let cwd_str = cwd
         .to_str()

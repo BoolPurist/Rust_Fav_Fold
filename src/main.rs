@@ -2,9 +2,8 @@ use std::error::Error;
 
 use clap::Parser;
 use colored::*;
-
+use folder_favorite::AppResult;
 use folder_favorite::{cli_args::Commands, command_handling, linux_clipboard};
-type AppError = Result<(), Box<dyn Error>>;
 fn main() {
     if let Err(error) = linux_clipboard::execute_as_possible_daemon_clipboard() {
         exit_with_error(&*error);
@@ -16,7 +15,7 @@ fn main() {
     }
 }
 
-fn handle_subcommand(sub_commands: &Commands) -> AppError {
+fn handle_subcommand(sub_commands: &Commands) -> AppResult {
     return match sub_commands {
         Commands::Set {
             name_favorite,
@@ -29,12 +28,12 @@ fn handle_subcommand(sub_commands: &Commands) -> AppError {
         Commands::Get { name, clipboard } => match name.as_ref() {
             Some(get_name) => {
                 let favorite = command_handling::get_fav(&get_name)?;
-                put_into_clipboard_or_print(favorite.get_path(), *clipboard);
+                let _ = put_into_clipboard_or_print(favorite.get_path(), *clipboard)?;
                 return Ok(());
             }
             None => {
                 let table = command_handling::get_all_fav_table(*clipboard)?;
-                put_into_clipboard_or_print(&table, *clipboard);
+                let _ = put_into_clipboard_or_print(&table, *clipboard)?;
                 return Ok(());
             }
         },
@@ -57,14 +56,14 @@ fn handle_subcommand(sub_commands: &Commands) -> AppError {
     };
 }
 
-fn put_into_clipboard_or_print(content: &str, clipboard: bool) {
+fn put_into_clipboard_or_print(content: &str, clipboard: bool) -> AppResult {
     if clipboard {
-        if let Err(clip_error) = linux_clipboard::put_into_clipboard(content) {
-            exit_with_error(&*clip_error)
-        }
+        linux_clipboard::put_into_clipboard(content)?;
     } else {
-        println!("{content}")
-    };
+        println!("{content}");
+    }
+
+    Ok(())
 }
 fn exit_with_error(message: &dyn Error) {
     let red_msg = format!("Error: {message}").red().to_string();
