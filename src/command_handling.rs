@@ -1,8 +1,10 @@
 use crate::favorite_folder_record::FavoriteFolderPath;
 use crate::file_data;
 use colored::*;
+use std::env;
 use std::error::Error;
 use std::fmt::Display;
+use std::io;
 use std::path::PathBuf;
 
 type Favorites = Vec<FavoriteFolderPath>;
@@ -129,4 +131,13 @@ fn pad_from_right(to_pad: &str, max_width: usize) -> String {
 
 fn find_by_name(records: &Favorites, name: &str) -> Option<usize> {
     records.iter().position(|fav| fav.get_name() == name)
+}
+
+pub fn set_label_to_cwd(name: &str) -> Result<(), Box<dyn Error>> {
+    let cwd = env::current_dir()?;
+    let cwd_str = cwd
+        .to_str()
+        .ok_or("Could not get working directory as new path value")?;
+    set_favorite_data(name, cwd_str)?;
+    Ok(())
 }

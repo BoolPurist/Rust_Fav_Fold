@@ -52,6 +52,12 @@ fn handle_subcommand(sub_commands: &Commands) {
             Ok(_) => (),
             Err(error) => exit_with_error(&*error),
         },
+        Commands::PwdSet { name_favorite } => {
+            match command_handling::set_label_to_cwd(&name_favorite) {
+                Ok(_) => (),
+                Err(error) => exit_with_error(&*error),
+            }
+        }
     };
 
     fn put_into_clipboard_or_print(content: &str, clipboard: bool) {

@@ -32,4 +32,9 @@ pub enum Commands {
     },
     #[command(visible_alias = "d", about = "Removes given name with its path")]
     Delete { name_favorite: String },
+    #[command(
+        visible_alias = "p",
+        about = "Creates or changes path under given label with current working directory"
+    )]
+    PwdSet { name_favorite: String },
 }
