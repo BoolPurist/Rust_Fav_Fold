@@ -7,6 +7,11 @@ use folder_favorite::AppResult;
 use folder_favorite::{cli_args::Commands, command_handling, linux_clipboard};
 
 fn main() {
+    // if any error is comes from the lib crate then the user gets the error displayed as an red
+    // text. The program always exits with error code 1 in these cases.
+
+    // Need to check if the program was started as child process to keep set clipbaord alive
+    // for linux
     if let Err(error) = linux_clipboard::execute_as_possible_daemon_clipboard() {
         exit_with_error(&*error);
     }

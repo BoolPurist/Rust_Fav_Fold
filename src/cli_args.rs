@@ -1,5 +1,8 @@
 use clap::Parser;
 
+/// Structs to define the allowed and passable arguments for app over cli
+/// All positional arguments are validated to be non-empty or not only whitespaces
+/// The argument is made up of subcommands
 #[derive(Parser, Debug)]
 #[command(
     author = "BoolPurist",
@@ -8,50 +11,56 @@ use clap::Parser;
     propagate_version = true
 )]
 pub enum Commands {
-    #[command(
-        visible_alias = "g",
-        about = "Outputs path of given name or all paths if no name is given"
-    )]
+    #[command(visible_alias = "g")]
+    /// Outputs location of given name or all paths if no name is given.
+    /// Location to existing files/folders will be shown in green otherwise red.
     Get {
+        /// Label/name to get the location from. If left out then all names with their location are
+        /// shown.
         name: Option<String>,
+        /// If provided then the output will be written to clipboard.
         #[arg(short, long)]
         clipboard: bool,
     },
-    #[command(
-        visible_alias = "r",
-        about = "Changes name of favorite path. Will expand relative paths to their absolute variant"
-    )]
+    #[command(visible_alias = "r")]
+    /// Changes name of favorite path.
     Rename {
+        /// name/label to change.
         #[arg(value_parser = parse_trimmed_not_empty)]
         old_name_favorite: String,
+        /// new name/label to use for a location.
         #[arg(value_parser = parse_trimmed_not_empty)]
         new_name_favorite: String,
     },
-    #[command(
-        visible_alias = "s",
-        about = "Creates or changes path under a given name"
-    )]
+    #[command(visible_alias = "s")]
+    /// Creates or changes location under a given name.
+    /// Will expand relative paths to their absolute variant.
     Set {
+        /// Name for a new or existing location.
         #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
+        /// Location under the new or new location under a existing name.
         #[arg(value_parser = parse_trimmed_not_empty)]
         new_path: String,
     },
-    #[command(visible_alias = "d", about = "Removes given name with its path")]
+    #[command(visible_alias = "d")]
+    /// Removes given name with its path. Note: The location on your files system will not be
+    /// removed of course.
     Delete {
+        /// Name with its location to be removed.
         #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
     },
-    #[command(
-        visible_alias = "p",
-        about = "Creates or changes path under given label with current working directory"
-    )]
+    #[command(visible_alias = "p", about = "")]
+    /// Creates or changes path under given label with current working directory
     PwdSet {
+        /// New name or existing name under which the current working directory is to be written.
         #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
     },
 }
 
+/// Function used to make sure no positional arguments are empty or only whitespaces
 fn parse_trimmed_not_empty(to_parse: &str) -> Result<String, String> {
     let trimmed = to_parse.trim().to_string();
 

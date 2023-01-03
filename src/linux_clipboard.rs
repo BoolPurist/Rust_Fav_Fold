@@ -1,6 +1,9 @@
 use arboard::{Clipboard, SetExtLinux};
 use std::{env, error::Error, process};
 
+/// Extra long and special naming so it will not be passed by the as argument by accident.
+/// This keyword instructs the app to start a new process for keeping the set clipboard alive
+/// on linux.
 const DEAMON_KEYWORD: &str = "__INTERNAL_DAEMON_FAV_FOLDER";
 
 pub fn put_into_clipboard(content: &str) -> Result<(), Box<dyn Error>> {
