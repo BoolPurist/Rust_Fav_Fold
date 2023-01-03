@@ -19,7 +19,9 @@ pub enum Commands {
     },
     #[command(visible_alias = "r", about = "Changes name of favorite path")]
     Rename {
+        #[arg(value_parser = parse_trimmed_not_empty)]
         old_name_favorite: String,
+        #[arg(value_parser = parse_trimmed_not_empty)]
         new_name_favorite: String,
     },
     #[command(
@@ -27,14 +29,32 @@ pub enum Commands {
         about = "Creates or changes path under a given name"
     )]
     Set {
+        #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
+        #[arg(value_parser = parse_trimmed_not_empty)]
         new_path: String,
     },
     #[command(visible_alias = "d", about = "Removes given name with its path")]
-    Delete { name_favorite: String },
+    Delete {
+        #[arg(value_parser = parse_trimmed_not_empty)]
+        name_favorite: String,
+    },
     #[command(
         visible_alias = "p",
         about = "Creates or changes path under given label with current working directory"
     )]
-    PwdSet { name_favorite: String },
+    PwdSet {
+        #[arg(value_parser = parse_trimmed_not_empty)]
+        name_favorite: String,
+    },
+}
+
+fn parse_trimmed_not_empty(to_parse: &str) -> Result<String, String> {
+    let trimmed = to_parse.trim().to_string();
+
+    if trimmed.is_empty() {
+        Err("Must not be emtpy or only whitespaces".into())
+    } else {
+        Ok(trimmed)
+    }
 }
