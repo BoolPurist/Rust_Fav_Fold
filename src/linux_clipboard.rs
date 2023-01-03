@@ -18,7 +18,7 @@ pub fn execute_as_possible_daemon_clipboard() -> Result<(), Box<dyn Error>> {
     }
     let args: Vec<String> = env::args().collect();
 
-    if args.len() == 3 && &args[1] == DEAMON_KEYWORD {
+    if args.len() == 3 && args[1] == DEAMON_KEYWORD {
         let clipboard = &args[2];
         set_and_wait_for_clipboard_as_daemon(clipboard)?;
         std::process::exit(0);

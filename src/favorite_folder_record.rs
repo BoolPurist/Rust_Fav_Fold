@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fmt::Display;
 use std::path::Path;
-use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct FavoriteFolderPath {
@@ -38,9 +37,9 @@ impl Display for InvalidFavoriteFields {
 impl Error for InvalidFavoriteFields {}
 
 impl FavoriteFolderPath {
-    pub fn new(name: &str, path: &PathBuf) -> Result<Self, InvalidFavoriteFields> {
+    pub fn new(name: &str, path: &Path) -> Result<Self, InvalidFavoriteFields> {
         let trimmed_name = name.trim().to_string();
-        if trimmed_name == "" {
+        if trimmed_name.is_empty() {
             return Err(InvalidFavoriteFields::EmptyName);
         }
 
@@ -50,7 +49,7 @@ impl FavoriteFolderPath {
 
         let trimmed_path = path_str.trim().to_string();
 
-        if trimmed_path == "" {
+        if trimmed_path.is_empty() {
             return Err(InvalidFavoriteFields::EmptyPath);
         }
 

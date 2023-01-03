@@ -24,10 +24,7 @@ pub fn get_fav(name: &str) -> AppResult<FavoriteFolderPath> {
     let found = records
         .into_iter()
         .find(|nxt_fav| nxt_fav.get_name() == name)
-        .ok_or(AppArgError(format!(
-            "No favortie path found with name {}",
-            name.to_string()
-        )))?;
+        .ok_or_else(|| AppArgError(format!("No favortie path found with name {}", name)))?;
 
     Ok(found)
 }
@@ -38,15 +35,16 @@ pub fn rename_fav(name: &str, new_name: &str) -> AppResult {
     let found = records
         .iter_mut()
         .find(|nxt_fav| nxt_fav.get_name() == name)
-        .ok_or(AppArgError(format!(
-            "No favortie path found with name {} for renaming to new_name {}",
-            name.to_string(),
-            new_name.to_string(),
-        )))?;
+        .ok_or_else(|| {
+            AppArgError(format!(
+                "No favortie path found with name {} for renaming to new_name {}",
+                name, new_name,
+            ))
+        })?;
 
     found.set_name(new_name);
 
-    let _ = file_data::save_favorites(records).map_err(|error| Box::new(error))?;
+    file_data::save_favorites(records).map_err(Box::new)?;
 
     Ok(())
 }
@@ -57,7 +55,8 @@ pub fn remove_from_fav(name: &str) -> AppResult {
         Some(to_delete) => {
             records.remove(to_delete);
             file_data::save_favorites(records)?;
-            return Ok(());
+
+            Ok(())
         }
         None => Err(AppArgError(format!(
             "No favorite with name {} to be deleted",
@@ -81,7 +80,7 @@ pub fn get_all_fav_table(for_clipboard: bool) -> AppResult<String> {
             let path_processed = if for_clipboard {
                 raw_path.to_string()
             } else {
-                get_folder_with_color(&raw_path)
+                get_folder_with_color(raw_path)
             };
 
             format!("{}  {}", padded_name, path_processed)
@@ -109,7 +108,7 @@ pub fn set_favorite_data(name: &str, path: &str) -> AppResult {
         None => records.push(new_path),
     };
 
-    let _ = file_data::save_favorites(records).map_err(|error| Box::new(error))?;
+    file_data::save_favorites(records).map_err(Box::new)?;
 
     Ok(())
 }

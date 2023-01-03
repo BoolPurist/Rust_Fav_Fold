@@ -25,23 +25,22 @@ impl Display for DataIoError {
 impl Error for DataIoError {}
 
 pub fn get_favorites() -> Result<Vec<FavoriteFolderPath>, DataIoError> {
-    let to_load_from = paths::get_path_to_data().map_err(|error| DataIoError::DataDir(error))?;
+    let to_load_from = paths::get_path_to_data().map_err(DataIoError::DataDir)?;
 
     if !to_load_from.exists() {
         return Ok(Vec::new());
     }
 
-    let raw_content = fs::read_to_string(&to_load_from).map_err(|error| DataIoError::Io(error))?;
-    let favorites = serde_json::from_str(&raw_content)
-        .map_err(|error| DataIoError::InvalidAppDataFormat(error))?;
+    let raw_content = fs::read_to_string(&to_load_from).map_err(DataIoError::Io)?;
+    let favorites =
+        serde_json::from_str(&raw_content).map_err(DataIoError::InvalidAppDataFormat)?;
 
     Ok(favorites)
 }
 
 pub fn save_favorites(to_save: Vec<FavoriteFolderPath>) -> Result<(), DataIoError> {
-    let to_save = serde_json::to_string(&to_save)
-        .map_err(|error| DataIoError::InvalidAppDataFormat(error))?;
-    let save_location = paths::get_path_to_data().map_err(|error| DataIoError::DataDir(error))?;
+    let to_save = serde_json::to_string(&to_save).map_err(DataIoError::InvalidAppDataFormat)?;
+    let save_location = paths::get_path_to_data().map_err(DataIoError::DataDir)?;
 
-    fs::write(save_location, to_save).map_err(|error| DataIoError::Io(error))
+    fs::write(save_location, to_save).map_err(DataIoError::Io)
 }
