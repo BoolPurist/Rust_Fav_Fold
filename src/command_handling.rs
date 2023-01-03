@@ -1,22 +1,13 @@
+use std::borrow::Cow;
+use std::env;
+use std::path::PathBuf;
+
 use crate::favorite_folder_record::FavoriteFolderPath;
 use crate::{file_data, AppResult};
+
 use colored::*;
-use std::env;
-use std::error::Error;
-use std::fmt::Display;
-use std::path::PathBuf;
+
 type Favorites = Vec<FavoriteFolderPath>;
-
-#[derive(Debug)]
-struct AppArgError(String);
-
-impl Display for AppArgError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "{}", self.0)
-    }
-}
-
-impl Error for AppArgError {}
 
 pub fn get_fav(name: &str) -> AppResult<FavoriteFolderPath> {
     let records = file_data::get_favorites()?;
@@ -24,7 +15,7 @@ pub fn get_fav(name: &str) -> AppResult<FavoriteFolderPath> {
     let found = records
         .into_iter()
         .find(|nxt_fav| nxt_fav.get_name() == name)
-        .ok_or_else(|| AppArgError(format!("No favortie path found with name {}", name)))?;
+        .ok_or_else(|| format!("No favortie path found with name {}", name))?;
 
     Ok(found)
 }
@@ -36,10 +27,10 @@ pub fn rename_fav(name: &str, new_name: &str) -> AppResult {
         .iter_mut()
         .find(|nxt_fav| nxt_fav.get_name() == name)
         .ok_or_else(|| {
-            AppArgError(format!(
+            format!(
                 "No favortie path found with name {} for renaming to new_name {}",
                 name, new_name,
-            ))
+            )
         })?;
 
     found.set_name(new_name);
@@ -58,12 +49,10 @@ pub fn remove_from_fav(name: &str) -> AppResult {
 
             Ok(())
         }
-        None => Err(AppArgError(format!(
-            "No favorite with name {} to be deleted",
-            name
-        )))?,
+        None => Err(format!("No favorite with name {} to be deleted", name))?,
     }
 }
+
 pub fn get_all_fav_table(for_clipboard: bool) -> AppResult<String> {
     let records = file_data::get_favorites()?;
 
@@ -74,7 +63,13 @@ pub fn get_all_fav_table(for_clipboard: bool) -> AppResult<String> {
     return Ok(records
         .into_iter()
         .map(|next_record| {
-            let padded_name = pad_from_right(next_record.get_name(), max_width);
+            let name = next_record.get_name();
+            assert!(
+                name.len() <= max_width,
+                "Could not find max width for all labels"
+            );
+
+            let padded_name = pad_from_right(name, max_width);
             let raw_path = next_record.get_path();
 
             let path_processed = if for_clipboard {
@@ -113,17 +108,19 @@ pub fn set_favorite_data(name: &str, path: &str) -> AppResult {
     Ok(())
 }
 
-fn pad_from_right(to_pad: &str, max_width: usize) -> String {
+fn pad_from_right(to_pad: &str, max_width: usize) -> Cow<'_, str> {
     let actual_len = to_pad.len();
 
-    assert!(actual_len <= max_width);
+    if actual_len >= max_width {
+        return to_pad.into();
+    }
 
     let diff = max_width - actual_len;
     let padding = " ".repeat(diff);
     let mut padded = String::from(to_pad);
     padded.push_str(&padding);
 
-    padded
+    padded.into()
 }
 
 fn find_by_name(records: &Favorites, name: &str) -> Option<usize> {
