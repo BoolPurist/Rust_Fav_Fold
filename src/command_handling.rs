@@ -72,22 +72,22 @@ pub fn get_all_fav_table(for_clipboard: bool) -> AppResult<String> {
             let padded_name = pad_from_right(name, max_width);
             let raw_path = next_record.get_path();
 
-            let path_processed = if for_clipboard {
-                raw_path.to_string()
-            } else {
-                get_folder_with_color(raw_path)
-            };
+            let path_processed = get_folder_with_color(raw_path, for_clipboard);
 
             format!("{}  {}", padded_name, path_processed)
         })
         .collect::<Vec<String>>()
         .join("\n"));
 
-    fn get_folder_with_color(path: &str) -> String {
+    fn get_folder_with_color(path: &str, for_clipboard: bool) -> Cow<'_, str> {
+        if for_clipboard {
+            return path.into();
+        }
+
         if PathBuf::from(&path).exists() {
-            path.green().to_string()
+            path.green().to_string().into()
         } else {
-            path.red().to_string()
+            path.red().to_string().into()
         }
     }
 }
