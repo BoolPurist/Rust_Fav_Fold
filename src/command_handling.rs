@@ -108,6 +108,15 @@ pub fn set_favorite_data(name: &str, path: &str) -> AppResult {
     Ok(())
 }
 
+pub fn set_label_to_cwd(name: &str) -> AppResult {
+    let cwd = env::current_dir()?;
+    let cwd_str = cwd
+        .to_str()
+        .ok_or("Could not get working directory as new path value")?;
+    set_favorite_data(name, cwd_str)?;
+    Ok(())
+}
+
 fn pad_from_right(to_pad: &str, max_width: usize) -> Cow<'_, str> {
     let actual_len = to_pad.len();
 
@@ -125,13 +134,4 @@ fn pad_from_right(to_pad: &str, max_width: usize) -> Cow<'_, str> {
 
 fn find_by_name(records: &Favorites, name: &str) -> Option<usize> {
     records.iter().position(|fav| fav.get_name() == name)
-}
-
-pub fn set_label_to_cwd(name: &str) -> AppResult {
-    let cwd = env::current_dir()?;
-    let cwd_str = cwd
-        .to_str()
-        .ok_or("Could not get working directory as new path value")?;
-    set_favorite_data(name, cwd_str)?;
-    Ok(())
 }

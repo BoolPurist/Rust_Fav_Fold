@@ -17,7 +17,10 @@ pub enum Commands {
         #[arg(short, long)]
         clipboard: bool,
     },
-    #[command(visible_alias = "r", about = "Changes name of favorite path")]
+    #[command(
+        visible_alias = "r",
+        about = "Changes name of favorite path. Will expand relative paths to their absolute variant"
+    )]
     Rename {
         #[arg(value_parser = parse_trimmed_not_empty)]
         old_name_favorite: String,
