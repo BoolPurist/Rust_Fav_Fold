@@ -2,8 +2,10 @@ use std::error::Error;
 
 use clap::Parser;
 use colored::*;
+
 use folder_favorite::AppResult;
 use folder_favorite::{cli_args::Commands, command_handling, linux_clipboard};
+
 fn main() {
     if let Err(error) = linux_clipboard::execute_as_possible_daemon_clipboard() {
         exit_with_error(&*error);
@@ -21,24 +23,24 @@ fn handle_subcommand(sub_commands: &Commands) -> AppResult {
             name_favorite,
             new_path,
         } => {
-            let _ = command_handling::set_favorite_data(&name_favorite, &new_path)?;
+            command_handling::set_favorite_data(name_favorite, new_path)?;
 
             Ok(())
         }
         Commands::Get { name, clipboard } => match name.as_ref() {
             Some(get_name) => {
-                let favorite = command_handling::get_fav(&get_name)?;
-                let _ = put_into_clipboard_or_print(favorite.get_path(), *clipboard)?;
+                let favorite = command_handling::get_fav(get_name)?;
+                put_into_clipboard_or_print(favorite.get_path(), *clipboard)?;
                 return Ok(());
             }
             None => {
                 let table = command_handling::get_all_fav_table(*clipboard)?;
-                let _ = put_into_clipboard_or_print(&table, *clipboard)?;
+                put_into_clipboard_or_print(&table, *clipboard)?;
                 return Ok(());
             }
         },
         Commands::Delete { name_favorite } => {
-            let _ = command_handling::remove_from_fav(&name_favorite)?;
+            command_handling::remove_from_fav(name_favorite)?;
 
             Ok(())
         }
@@ -46,11 +48,11 @@ fn handle_subcommand(sub_commands: &Commands) -> AppResult {
             old_name_favorite,
             new_name_favorite,
         } => {
-            let _ = command_handling::rename_fav(&old_name_favorite, &new_name_favorite)?;
+            command_handling::rename_fav(old_name_favorite, new_name_favorite)?;
             Ok(())
         }
         Commands::PwdSet { name_favorite } => {
-            let _ = command_handling::set_label_to_cwd(&name_favorite)?;
+            command_handling::set_label_to_cwd(name_favorite)?;
             Ok(())
         }
     };
