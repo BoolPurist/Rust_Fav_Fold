@@ -136,16 +136,16 @@ pub fn get_all_fav_table(
 
         let expanded = shellexpand::tilde(raw_path);
         let expanded_path = Path::new(expanded.as_ref());
-        let colored = check_if_exits(&expanded_path, raw_path);
+        let colored = check_if_exits(expanded_path, raw_path);
 
         Cow::Owned(colored)
     }
 
     fn check_if_exits(path: &Path, to_check_color: &str) -> String {
         if path.exists() {
-            term_colors::color_exists_msg(to_check_color).into()
+            term_colors::color_exists_msg(to_check_color)
         } else {
-            term_colors::color_not_found(to_check_color).into()
+            term_colors::color_not_found(to_check_color)
         }
     }
 }
@@ -153,7 +153,7 @@ pub fn get_all_fav_table(
 pub fn set_favorite_data(name: &str, path: &str) -> AppResult {
     let mut records = file_access::get_favorites()?;
 
-    let new_path = FavoriteFolderPath::new(name, &Path::new(path))?;
+    let new_path = FavoriteFolderPath::new(name, Path::new(path))?;
     match find_by_name(&records, name) {
         Some(index) => {
             records[index] = new_path;
