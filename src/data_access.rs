@@ -3,9 +3,10 @@ use crate::app::term_colors;
 use crate::cli_args::GetParams;
 use crate::favorite_folder_record::FavoriteFolderPath;
 use crate::{file_access, AppResult};
+use shellexpand;
 use std::borrow::Cow;
 use std::env;
-use std::path::PathBuf;
+use std::path::Path;
 
 type Favorites = Vec<FavoriteFolderPath>;
 
@@ -133,12 +134,18 @@ pub fn get_all_fav_table(
             return raw_path.into();
         }
 
-        let path = PathBuf::from(raw_path);
+        let expanded = shellexpand::tilde(raw_path);
+        let expanded_path = Path::new(expanded.as_ref());
+        let colored = check_if_exits(&expanded_path, raw_path);
 
+        Cow::Owned(colored)
+    }
+
+    fn check_if_exits(path: &Path, to_check_color: &str) -> String {
         if path.exists() {
-            term_colors::color_exists_msg(raw_path).into()
+            term_colors::color_exists_msg(to_check_color).into()
         } else {
-            term_colors::color_not_found(raw_path).into()
+            term_colors::color_not_found(to_check_color).into()
         }
     }
 }
@@ -146,7 +153,7 @@ pub fn get_all_fav_table(
 pub fn set_favorite_data(name: &str, path: &str) -> AppResult {
     let mut records = file_access::get_favorites()?;
 
-    let new_path = FavoriteFolderPath::new(name, &PathBuf::from(path))?;
+    let new_path = FavoriteFolderPath::new(name, &Path::new(path))?;
     match find_by_name(&records, name) {
         Some(index) => {
             records[index] = new_path;
