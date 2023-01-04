@@ -1,3 +1,4 @@
+use crate::AppResult;
 use clap::Parser;
 
 /// Structs to define the allowed and passable arguments for app over cli
@@ -18,9 +19,13 @@ pub enum Commands {
         /// Label/name to get the location from. If left out then all names with their location are
         /// shown.
         name: Option<String>,
-        /// If provided then the output will be written to clipboard.
+        /// If provided then the output will be written to clipboard instead of stdout.
         #[arg(short, long)]
         clipboard: bool,
+        /// list all names and paths with line numbers. Waits for one line to accept a line number.
+        /// The path of the location with the respective line is then outputed.
+        #[arg(short, long)]
+        ask_number: bool,
     },
     #[command(visible_alias = "r")]
     /// Changes name of favorite path.
@@ -58,6 +63,46 @@ pub enum Commands {
         #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
     },
+}
+
+pub struct GetParams {
+    clipboard: bool,
+    ask_number: bool,
+    name: Option<String>,
+}
+
+impl GetParams {
+    pub fn new(args: &Commands) -> AppResult<Self> {
+        if let Commands::Get {
+            clipboard,
+            ask_number,
+            name,
+        } = args
+        {
+            Ok(Self {
+                clipboard: *clipboard,
+                name: name.clone(),
+                ask_number: *ask_number,
+            })
+        } else {
+            Err(format!(
+                "Can create {} from variant {:?}",
+                stringify!(GetParams),
+                args
+            )
+            .into())
+        }
+    }
+
+    pub fn copy_has_clipboard(&self) -> bool {
+        self.clipboard
+    }
+    pub fn copy_ask_number(&self) -> bool {
+        self.ask_number
+    }
+    pub fn get_name(&self) -> Option<&str> {
+        self.name.as_deref()
+    }
 }
 
 /// Function used to make sure no positional arguments are empty or only whitespaces
