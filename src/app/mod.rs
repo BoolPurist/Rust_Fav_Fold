@@ -33,7 +33,7 @@ pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
                     .expect(
                         "Unexpected error: get_fav function returned an index to found location but out of bound index occured",
                     );
-                    put_into_clipboard_or_print(found.get_name(), clipboard)?;
+                    put_into_clipboard_or_print(found.get_path(), clipboard)?;
                 }
                 None => {
                     return match (get_params.copy_fuzzy(), get_params.copy_ask_number()) {
