@@ -1,8 +1,5 @@
 use clap::Parser;
-use folder_favorite::{
-    cli_args::{Commands, GetParams},
-    clipboard, data_access, AppResult,
-};
+use folder_favorite::{cli_args::Commands, clipboard, data_access, AppResult};
 
 use folder_favorite::app;
 
@@ -32,11 +29,7 @@ fn handle_subcommand(sub_commands: &Commands) -> AppResult {
 
             Ok(())
         }
-        Commands::Get { .. } => {
-            let get_params = GetParams::new(sub_commands)?;
-
-            app::handle_get_subcommand(&get_params)
-        }
+        Commands::Get(get_params) => app::handle_get_subcommand(&get_params),
         Commands::Delete { name_favorite } => {
             data_access::remove_from_fav(name_favorite)?;
 

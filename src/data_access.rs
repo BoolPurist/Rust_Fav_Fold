@@ -1,12 +1,10 @@
-use std::borrow::Cow;
-use std::env;
-use std::path::PathBuf;
-
+use crate::app::term_colors;
 use crate::cli_args::GetParams;
 use crate::favorite_folder_record::FavoriteFolderPath;
 use crate::{file_access, AppResult};
-
-use colored::*;
+use std::borrow::Cow;
+use std::env;
+use std::path::PathBuf;
 
 type Favorites = Vec<FavoriteFolderPath>;
 
@@ -67,14 +65,12 @@ pub fn get_all_fav_table(
     get_params: &GetParams,
 ) -> AppResult<String> {
     let spacing_padding = get_spacing_padding();
-
     let max_width = all_locations
         .iter()
         .fold(0, |akk, next| akk.max(next.get_name().len()));
 
     let records_without_line_numbers: Vec<String> = all_locations
         .iter()
-        .into_iter()
         .map(|next_record| {
             let name = next_record.get_name();
             assert!(
@@ -91,7 +87,6 @@ pub fn get_all_fav_table(
             format!("{padded_name}{spacing_padding}{path_processed}")
         })
         .collect();
-
     let records =
         handle_line_number_if_needed(&records_without_line_numbers, get_params, &spacing_padding);
     return Ok(records.join("\n"));
@@ -107,7 +102,7 @@ pub fn get_all_fav_table(
             let last_line_number = records_without_line_numbers.len();
             let max_width_line_number = last_line_number.to_string().len();
 
-            let line_numbers_padded = (1..last_line_number).map(|next_line_number| {
+            let line_numbers_padded = (1..=last_line_number).map(|next_line_number| {
                 let to_pad = next_line_number.to_string();
                 assert!(
                     to_pad.len() <= max_width_line_number,
@@ -138,9 +133,9 @@ pub fn get_all_fav_table(
         }
 
         if PathBuf::from(path).exists() {
-            path.green().to_string().into()
+            term_colors::color_exists_msg(path).into()
         } else {
-            path.red().to_string().into()
+            term_colors::color_not_found(path).into()
         }
     }
 }

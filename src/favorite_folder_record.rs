@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::fmt::Display;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 #[derive(Debug, Serialize, Deserialize)]
 
@@ -25,9 +25,7 @@ impl FavoriteFolderPath {
             return Err(InvalidFavoriteFields::EmptyName);
         }
 
-        let abs_path = path
-            .canonicalize()
-            .map_err(|_| InvalidFavoriteFields::InvalidUtf8PathStr)?;
+        let abs_path = path.canonicalize().unwrap_or_else(|_| PathBuf::from(path));
 
         let path_str = abs_path
             .to_str()
