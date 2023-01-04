@@ -29,7 +29,7 @@ fn handle_subcommand(sub_commands: &Commands) -> AppResult {
 
             Ok(())
         }
-        Commands::Get(get_params) => app::handle_get_subcommand(&get_params),
+        Commands::Get(get_params) => app::handle_get_subcommand(get_params),
         Commands::Delete { name_favorite } => {
             data_access::remove_from_fav(name_favorite)?;
 

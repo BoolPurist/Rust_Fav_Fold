@@ -55,10 +55,7 @@ pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
 
         if let Some(name) = get_params.get_name() {
             if get_params.copy_fuzzy() {
-                all_locations = all_locations
-                    .into_iter()
-                    .filter(|possible_match| possible_match.get_name().contains(name))
-                    .collect();
+                all_locations.retain(|possible_match| possible_match.get_name().contains(name));
             }
         }
 

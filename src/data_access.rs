@@ -2,10 +2,10 @@ use crate::app::term_colors;
 
 use crate::cli_args::GetParams;
 use crate::favorite_folder_record::FavoriteFolderPath;
-use crate::{file_access, paths, AppResult};
+use crate::{file_access, AppResult};
 use std::borrow::Cow;
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 type Favorites = Vec<FavoriteFolderPath>;
 
