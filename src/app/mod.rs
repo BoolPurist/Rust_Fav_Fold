@@ -1,4 +1,5 @@
 use crate::cli_args::GetParams;
+use crate::favorite_folder_record::FavoriteFolderPath;
 use colored::*;
 use std::error::Error;
 
@@ -23,42 +24,63 @@ pub fn exit_with_error(message: &dyn Error) {
 pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
     let clipboard = get_params.copy_has_clipboard();
     match get_params.get_name() {
-        Some(_) => {
-            let favorite = data_access::get_fav(get_params)?;
-            put_into_clipboard_or_print(favorite.get_path(), clipboard)?;
+        Some(name_given) => {
+            let (may_found, read_records) = data_access::get_fav(name_given)?;
+
+            match may_found {
+                Some(index) => {
+                    let found = read_records.get(index)
+                    .expect(
+                        "Unexpected error: get_fav function returned an index to found location but out of bound index occured",
+                    );
+                    put_into_clipboard_or_print(found.get_name(), clipboard)?;
+                }
+                None => {
+                    return if get_params.copy_ask_number() {
+                        get_all(&read_records, get_params)
+                    } else {
+                        Err(format!("No path found for name: {}", name_given).into())
+                    };
+                }
+            }
 
             Ok(())
         }
         None => {
             let all_locations = file_access::get_favorites()?;
-            let table = data_access::get_all_fav_table(&all_locations, get_params)?;
-            if get_params.copy_ask_number() {
-                println!("{table}");
+            get_all(&all_locations, get_params)?;
 
-                let given_number = console_interaction::ask_possible_prompt_for_ask_number(
-                    &all_locations,
-                    get_params,
-                )?;
+            Ok(())
+        }
+    }
+}
 
-                match given_number {
-                    Some(index_start_from_one) => {
-                        let index = index_start_from_one - 1;
-                        // function for asking number of user ensures that the index will not
-                        // be out of bounds
-                        let to_put = &all_locations[index];
+fn get_all(all_locations: &[FavoriteFolderPath], get_params: &GetParams) -> AppResult {
+    let clipboard = get_params.copy_has_clipboard();
+    let table = data_access::get_all_fav_table(all_locations, get_params)?;
+    if get_params.copy_ask_number() {
+        println!("{table}");
 
-                        put_into_clipboard_or_print(to_put.get_path(), clipboard)?;
-                        Ok(())
-                    }
-                    None => {
-                        put_into_clipboard_or_print(&table, clipboard)?;
-                        Ok(())
-                    }
-                }
-            } else {
+        let given_number =
+            console_interaction::ask_possible_prompt_for_ask_number(all_locations, get_params)?;
+
+        match given_number {
+            Some(index_start_from_one) => {
+                let index = index_start_from_one - 1;
+                // function for asking number of user ensures that the index will not
+                // be out of bounds
+                let to_put = &all_locations[index];
+
+                put_into_clipboard_or_print(to_put.get_path(), clipboard)?;
+                Ok(())
+            }
+            None => {
                 put_into_clipboard_or_print(&table, clipboard)?;
                 Ok(())
             }
         }
+    } else {
+        put_into_clipboard_or_print(&table, clipboard)?;
+        Ok(())
     }
 }

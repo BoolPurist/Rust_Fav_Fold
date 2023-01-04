@@ -3,7 +3,7 @@ use std::io::Write;
 use crate::{cli_args::GetParams, favorite_folder_record::FavoriteFolderPath, AppResult};
 
 pub fn ask_possible_prompt_for_ask_number(
-    paths: &Vec<FavoriteFolderPath>,
+    paths: &[FavoriteFolderPath],
     get_params: &GetParams,
 ) -> AppResult<Option<usize>> {
     if !get_params.copy_ask_number() {

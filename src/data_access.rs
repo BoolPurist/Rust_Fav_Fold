@@ -19,19 +19,14 @@ fn get_spacing_padding() -> String {
     " ".repeat(SPACING)
 }
 
-pub fn get_fav(get_params: &GetParams) -> AppResult<FavoriteFolderPath> {
-    let name: &str = get_params
-        .get_name()
-        .ok_or_else(|| "Single path can not be retrieved without a given name".to_string())?;
-
+pub fn get_fav(name: &str) -> AppResult<(Option<usize>, Vec<FavoriteFolderPath>)> {
     let records = file_access::get_favorites()?;
 
     let found = records
-        .into_iter()
-        .find(|nxt_fav| nxt_fav.get_name() == name)
-        .ok_or_else(|| format!("No favortie path found with name {}", name))?;
+        .iter()
+        .position(|nxt_fav| nxt_fav.get_name() == name);
 
-    Ok(found)
+    Ok((found, records))
 }
 
 pub fn rename_fav(name: &str, new_name: &str) -> AppResult {
