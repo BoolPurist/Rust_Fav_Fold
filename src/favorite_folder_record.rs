@@ -25,13 +25,10 @@ impl FavoriteFolderPath {
             return Err(InvalidFavoriteFields::EmptyName);
         }
 
-        let abs_path = path.canonicalize().unwrap_or_else(|_| PathBuf::from(path));
-
-        let path_str = abs_path
+        let utf_from_path = path
             .to_str()
             .ok_or(InvalidFavoriteFields::InvalidUtf8PathStr)?;
-
-        let trimmed_path = path_str.trim().to_string();
+        let trimmed_path = utf_from_path.trim().to_string();
 
         if trimmed_path.is_empty() {
             return Err(InvalidFavoriteFields::EmptyPath);
@@ -64,7 +61,6 @@ pub enum InvalidFavoriteFields {
     EmptyName,
     EmptyPath,
     InvalidUtf8PathStr,
-    UnableAbsPathResolve,
 }
 
 impl Display for InvalidFavoriteFields {
@@ -80,9 +76,6 @@ impl Display for InvalidFavoriteFields {
             ),
             InvalidFavoriteFields::InvalidUtf8PathStr => {
                 write!(f, "Path of favorite folder is not a valid utf 8 text")
-            }
-            InvalidFavoriteFields::UnableAbsPathResolve => {
-                write!(f, "Path could not be resolved to absolute")
             }
         }
     }

@@ -27,7 +27,6 @@ pub enum Commands {
     },
     #[command(visible_alias = "s")]
     /// Creates or changes location under a given name.
-    /// Will expand relative paths to their absolute variant.
     Set {
         /// Name for a new or existing location.
         #[arg(value_parser = parse_trimmed_not_empty)]

@@ -1,8 +1,10 @@
-use directories::ProjectDirs;
+use directories::{BaseDirs, ProjectDirs};
 use std::error::Error;
 use std::fmt::Display;
 use std::fs;
 use std::path::PathBuf;
+
+use crate::AppResult;
 #[derive(Debug)]
 pub struct DataDirError(String);
 

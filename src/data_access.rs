@@ -1,10 +1,11 @@
 use crate::app::term_colors;
+
 use crate::cli_args::GetParams;
 use crate::favorite_folder_record::FavoriteFolderPath;
-use crate::{file_access, AppResult};
+use crate::{file_access, paths, AppResult};
 use std::borrow::Cow;
 use std::env;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 type Favorites = Vec<FavoriteFolderPath>;
 
@@ -127,15 +128,17 @@ pub fn get_all_fav_table(
         }
     }
 
-    fn get_colored_path_if_no_clipboard(path: &str, for_clipboard: bool) -> Cow<'_, str> {
+    fn get_colored_path_if_no_clipboard(raw_path: &str, for_clipboard: bool) -> Cow<'_, str> {
         if for_clipboard {
-            return path.into();
+            return raw_path.into();
         }
 
-        if PathBuf::from(path).exists() {
-            term_colors::color_exists_msg(path).into()
+        let path = PathBuf::from(raw_path);
+
+        if path.exists() {
+            term_colors::color_exists_msg(raw_path).into()
         } else {
-            term_colors::color_not_found(path).into()
+            term_colors::color_not_found(raw_path).into()
         }
     }
 }
