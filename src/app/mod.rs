@@ -69,6 +69,12 @@ fn darw_table_and_prompt(
     all_locations: &[FavoriteFolderPath],
     get_params: &GetParams,
 ) -> AppResult {
+    if all_locations.is_empty() {
+        return Err(
+            format!("No match found for given name or no labels were created so far").into(),
+        );
+    }
+
     let clipboard = get_params.copy_has_clipboard();
     let table = data_access::get_all_fav_table(all_locations, get_params)?;
     if get_params.copy_ask_number() {
