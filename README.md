@@ -6,6 +6,15 @@ The paths are saved in a JSON file at the typical app data location of your os.
 Indented to be used on Windows, Linux and Mac.
 Functionality only confirmed under Linux with the distribution Fedora so far.
 
+## Features in more detail
+
+- Can save paths with label.
+- Can copy saved paths into OS clipboard via option flag.
+- Shows with colors which paths exits on file system
+- Can remember files with a certain name.
+- Can rename label for a path
+- Can remove saved paths by providing a label. Does not remove the folder of file under the path. 
+- Can remove all dangling paths. Dangling means that a path does not exit anymore
 
 ## Installation
 
@@ -22,17 +31,12 @@ cargo install --bin folder_favorite --path "."
 ## Usage
 
 This CLI app has subcommands to execute action like saving or showing a path.
-Paths are created and addressed via label.
+Paths are created and addressed via a label.
 
-## Features
+### Logging
 
-- Can save paths with label.
-- Can copy saved paths into OS clipboard via option flag.
-- Shows with colors which paths exits on file system
-- Can remember files with a certain name.
-- Can rename label for a path
-- Can remove saved paths by providing a label. Does not remove the folder of file under the path. 
-- Can remove all dangling paths. Dangling means that a path does not exit anymore
+You can adjust the filtering of app's logging by changing the environmental variable "FAVORITE_FOLDER_LOG"
+according to the [documentation](https://docs.rs/env_logger/latest/env_logger/index.html#enabling-logging) .
 
 ## Examples 
 

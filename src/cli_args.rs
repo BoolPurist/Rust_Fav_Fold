@@ -43,8 +43,10 @@ pub enum Commands {
         #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
     },
+    /// Removes all non-exisiting paths.
+    #[command(visible_alias = "c")]
     Clean,
-    #[command(visible_alias = "p", about = "")]
+    #[command(visible_alias = "p")]
     /// Creates or changes path under given label with current working directory
     PwdSet {
         /// New name or existing name under which the current working directory is to be written.
