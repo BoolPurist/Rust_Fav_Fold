@@ -6,11 +6,11 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[command(
     author = "BoolPurist",
-    version = "1.0.0",
+    version,
     about = "Tool to save and load paths to file or folders",
     propagate_version = true
 )]
-pub enum Commands {
+pub enum CliCommands {
     #[command(visible_alias = "g")]
     /// Outputs location of given name or all paths if no name is given.
     /// Location to existing files/folders will be shown in green otherwise red.
@@ -97,5 +97,16 @@ fn parse_trimmed_not_empty(to_parse: &str) -> Result<String, String> {
         Err("Must not be emtpy or only whitespaces".into())
     } else {
         Ok(trimmed)
+    }
+}
+#[cfg(test)]
+mod testing {
+    use clap::CommandFactory;
+
+    use super::*;
+
+    #[test]
+    fn verify_cli() {
+        CliCommands::command().debug_assert();
     }
 }

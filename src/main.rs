@@ -1,5 +1,5 @@
 use clap::Parser;
-use folder_favorite::{cli_args::Commands, clipboard, data_access, AppResult};
+use folder_favorite::{cli_args::CliCommands, clipboard, data_access, AppResult};
 
 use folder_favorite::{app, logging};
 
@@ -14,15 +14,15 @@ fn main() {
         app::exit_with_error(&*error);
     }
 
-    let args = Commands::parse();
+    let args = CliCommands::parse();
     if let Err(error) = handle_subcommand(&args) {
         app::exit_with_error(&*error);
     }
 }
 
-fn handle_subcommand(sub_commands: &Commands) -> AppResult {
-    return match sub_commands {
-        Commands::Set {
+fn handle_subcommand(sub_commands: &CliCommands) -> AppResult {
+    match sub_commands {
+        CliCommands::Set {
             name_favorite,
             new_path,
         } => {
@@ -30,23 +30,23 @@ fn handle_subcommand(sub_commands: &Commands) -> AppResult {
 
             Ok(())
         }
-        Commands::Get(get_params) => app::handle_get_subcommand(get_params),
-        Commands::Delete { name_favorite } => {
+        CliCommands::Get(get_params) => app::handle_get_subcommand(get_params),
+        CliCommands::Delete { name_favorite } => {
             data_access::remove_from_fav(name_favorite)?;
 
             Ok(())
         }
-        Commands::Rename {
+        CliCommands::Rename {
             old_name_favorite,
             new_name_favorite,
         } => {
             data_access::rename_fav(old_name_favorite, new_name_favorite)?;
             Ok(())
         }
-        Commands::PwdSet { name_favorite } => {
+        CliCommands::PwdSet { name_favorite } => {
             data_access::set_label_to_cwd(name_favorite)?;
             Ok(())
         }
-        Commands::Clean => data_access::remove_all_non_existing(),
-    };
+        CliCommands::Clean => data_access::remove_all_non_existing(),
+    }
 }

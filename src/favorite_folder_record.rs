@@ -51,7 +51,7 @@ impl FavoriteFolderPath {
         &self.path
     }
     pub fn path(&self) -> &Path {
-        &Path::new(&self.path)
+        Path::new(&self.path)
     }
     pub fn does_exit(&self) -> bool {
         Path::new(&self.path).exists()

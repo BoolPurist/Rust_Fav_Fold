@@ -71,7 +71,7 @@ fn darw_table_and_prompt(
 ) -> AppResult {
     if all_locations.is_empty() {
         return Err(
-            format!("No match found for given name or no labels were created so far").into(),
+            "No match found for given name or no labels were created so far".to_string().into(),
         );
     }
 
