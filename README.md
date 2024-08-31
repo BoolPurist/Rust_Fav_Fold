@@ -31,7 +31,8 @@ Paths are created and addressed via label.
 - Shows with colors which paths exits on file system
 - Can remember files with a certain name.
 - Can rename label for a path
-- Can remove paths on this app by providing label. Does not remove the folder of file under the path. 
+- Can remove saved paths by providing a label. Does not remove the folder of file under the path. 
+- Can remove all dangling paths. Dangling means that a path does not exit anymore
 
 ## Examples 
 

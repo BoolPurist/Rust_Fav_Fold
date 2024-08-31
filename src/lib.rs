@@ -4,13 +4,17 @@
 
 pub use all_favorites::AllFavorites;
 
-use std::error::Error;
 pub mod all_favorites;
 pub mod app;
 pub mod cli_args;
 pub mod clipboard;
+pub mod constants;
 pub mod data_access;
 pub mod favorite_folder_record;
 pub mod file_access;
+pub mod logging;
 pub mod paths;
+
+use std::error::Error;
+
 pub type AppResult<T = ()> = Result<T, Box<dyn Error>>;

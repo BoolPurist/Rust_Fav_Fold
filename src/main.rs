@@ -1,9 +1,10 @@
 use clap::Parser;
 use folder_favorite::{cli_args::Commands, clipboard, data_access, AppResult};
 
-use folder_favorite::app;
+use folder_favorite::{app, logging};
 
 fn main() {
+    logging::set_up_logging();
     // if any error is comes from the lib crate then the user gets the error displayed as an red
     // text. The program always exits with error code 1 in these cases.
 

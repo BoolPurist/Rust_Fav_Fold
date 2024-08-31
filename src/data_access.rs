@@ -64,9 +64,28 @@ pub fn remove_from_fav(name: &str) -> AppResult {
 pub fn remove_all_non_existing() -> AppResult {
     let records = file_access::get_favorites()?;
     let mut records = AllFavorites::new(records);
-    records.clean_all_dangling(|path| matches!(path.try_exists(), Ok(false)));
+    records.clean_all_dangling(matches_on_all_non_existing_paths);
     file_access::save_favorites(records.into())?;
     Ok(())
+}
+
+fn matches_on_all_non_existing_paths(path: &Path) -> bool {
+    match path.try_exists() {
+        Ok(true) => {
+            log::info!("Removing dangling path at {:?}.", path);
+            true
+        }
+        Ok(false) => false,
+        Err(error) => {
+            log::warn!(
+                "Could not determined if path {:?} exits due to IO error.\
+            \n Details: {}",
+                path,
+                error
+            );
+            false
+        }
+    }
 }
 
 pub fn get_all_fav_table(
