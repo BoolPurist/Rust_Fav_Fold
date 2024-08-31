@@ -43,6 +43,7 @@ pub enum Commands {
         #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
     },
+    Clean,
     #[command(visible_alias = "p", about = "")]
     /// Creates or changes path under given label with current working directory
     PwdSet {

@@ -20,6 +20,7 @@ pub fn get_path_to_data() -> Result<PathBuf, DataDirError> {
 
     Ok(data_dir)
 }
+
 fn get_data_dir() -> Result<PathBuf, DataDirError> {
     let project_path = ProjectDirs::from("", "", "folder favorite")
         .ok_or_else(|| DataDirError("Could not get project folder for user".to_string()))?;

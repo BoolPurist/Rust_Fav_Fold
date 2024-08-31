@@ -3,7 +3,7 @@ use std::error::Error;
 use std::fmt::Display;
 use std::path::Path;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 
 /// Struct to encapsulate a valid favorite created by the user
 /// This favorite is a not empty label with an absolute path
@@ -47,8 +47,11 @@ impl FavoriteFolderPath {
         &self.name
     }
 
-    pub fn get_path(&self) -> &str {
+    pub fn path_str(&self) -> &str {
         &self.path
+    }
+    pub fn path(&self) -> &Path {
+        &Path::new(&self.path)
     }
     pub fn does_exit(&self) -> bool {
         Path::new(&self.path).exists()

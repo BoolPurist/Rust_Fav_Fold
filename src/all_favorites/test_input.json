@@ -1,0 +1,14 @@
+[
+    {
+        "name": "studium",
+        "path": "/home/some_user/Documents/Studium"
+    },
+    {
+        "name": "dev_rust",
+        "path": "/home/some_user/Code/rust"
+    },
+    {
+        "name": "proc_macro",
+        "path": "/home/some_user/Code/rust/proc-macro-workshop"
+    }
+]

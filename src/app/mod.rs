@@ -33,7 +33,7 @@ pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
                     .expect(
                         "Unexpected error: get_fav function returned an index to found location but out of bound index occured",
                     );
-                    put_into_clipboard_or_print(found.get_path(), clipboard)?;
+                    put_into_clipboard_or_print(found.path_str(), clipboard)?;
                 }
                 None => {
                     return match (get_params.copy_fuzzy(), get_params.copy_ask_number()) {
@@ -90,7 +90,7 @@ fn darw_table_and_prompt(
                 // be out of bounds
                 let to_put = all_locations.get(index).unwrap();
 
-                put_into_clipboard_or_print(to_put.get_path(), clipboard)?;
+                put_into_clipboard_or_print(to_put.path_str(), clipboard)?;
                 Ok(())
             }
             None => {

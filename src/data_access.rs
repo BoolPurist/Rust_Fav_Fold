@@ -2,7 +2,7 @@ use crate::app::term_colors;
 
 use crate::cli_args::GetParams;
 use crate::favorite_folder_record::FavoriteFolderPath;
-use crate::{file_access, AppResult};
+use crate::{file_access, AllFavorites, AppResult};
 use shellexpand;
 use std::borrow::Cow;
 use std::env;
@@ -55,11 +55,18 @@ pub fn remove_from_fav(name: &str) -> AppResult {
         Some(to_delete) => {
             records.remove(to_delete);
             file_access::save_favorites(records)?;
-
             Ok(())
         }
         None => Err(format!("No favorite with name {} to be deleted", name))?,
     }
+}
+
+pub fn remove_all_non_existing() -> AppResult {
+    let records = file_access::get_favorites()?;
+    let mut records = AllFavorites::new(records);
+    records.clean_all_dangling(|path| matches!(path.try_exists(), Ok(false)));
+    file_access::save_favorites(records.into())?;
+    Ok(())
 }
 
 pub fn get_all_fav_table(
@@ -81,7 +88,7 @@ pub fn get_all_fav_table(
             );
 
             let padded_name = pad_from_right_until(name, max_width);
-            let raw_path = next_record.get_path();
+            let raw_path = next_record.path_str();
 
             let path_processed =
                 get_colored_path_if_no_clipboard(raw_path, get_params.copy_has_clipboard());

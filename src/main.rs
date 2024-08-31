@@ -46,5 +46,6 @@ fn handle_subcommand(sub_commands: &Commands) -> AppResult {
             data_access::set_label_to_cwd(name_favorite)?;
             Ok(())
         }
+        Commands::Clean => data_access::remove_all_non_existing(),
     };
 }
