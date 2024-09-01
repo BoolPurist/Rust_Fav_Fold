@@ -1,6 +1,6 @@
 ---
 source: src/all_favorites/mod.rs
-expression: actual
+expression: given_data
 ---
 AllFavorites(
     [
@@ -17,7 +17,7 @@ AllFavorites(
                 "dev_rust",
             ),
             location: NonEmptyText(
-                "/home/some_user/Code/rust",
+                "~/new_some_data",
             ),
         },
         FavoriteFolderPath {

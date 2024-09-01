@@ -1,5 +1,7 @@
 use clap::Parser;
 
+use crate::trimmed_not_empty_text::NonEmptyText;
+
 /// Structs to define the allowed and passable arguments for app over cli
 /// All positional arguments are validated to be non-empty or not only whitespaces
 /// The argument is made up of subcommands
@@ -19,29 +21,24 @@ pub enum CliCommands {
     /// Changes name of favorite path.
     Rename {
         /// name/label to change.
-        #[arg(value_parser = parse_trimmed_not_empty)]
-        old_name_favorite: String,
+        old_name_favorite: NonEmptyText,
         /// new name/label to use for a location.
-        #[arg(value_parser = parse_trimmed_not_empty)]
-        new_name_favorite: String,
+        new_name_favorite: NonEmptyText,
     },
     #[command(visible_alias = "s")]
     /// Creates or changes location under a given name.
     Set {
         /// Name for a new or existing location.
-        #[arg(value_parser = parse_trimmed_not_empty)]
-        name_favorite: String,
+        name_favorite: NonEmptyText,
         /// Location under the new or new location under a existing name.
-        #[arg(value_parser = parse_trimmed_not_empty)]
-        new_path: String,
+        new_path: NonEmptyText,
     },
     #[command(visible_alias = "d")]
     /// Removes given name with its path. Note: The location on your files system will not be
     /// removed of course.
     Delete {
         /// Name with its location to be removed.
-        #[arg(value_parser = parse_trimmed_not_empty)]
-        name_favorite: String,
+        name_favorite: NonEmptyText,
     },
     /// Removes all non-existing paths.
     #[command(visible_alias = "c")]
@@ -50,9 +47,9 @@ pub enum CliCommands {
     /// Creates or changes path under given label with current working directory
     PwdSet {
         /// New name or existing name under which the current working directory is to be written.
-        #[arg(value_parser = parse_trimmed_not_empty)]
-        name_favorite: String,
+        name_favorite: NonEmptyText,
     },
+    Reset,
 }
 
 #[derive(Parser, Debug)]
@@ -89,16 +86,6 @@ impl GetParams {
     }
 }
 
-/// Function used to make sure no positional arguments are empty or only whitespaces
-fn parse_trimmed_not_empty(to_parse: &str) -> Result<String, String> {
-    let trimmed = to_parse.trim().to_string();
-
-    if trimmed.is_empty() {
-        Err("Must not be empty or only whitespaces".into())
-    } else {
-        Ok(trimmed)
-    }
-}
 #[cfg(test)]
 mod testing {
     use clap::CommandFactory;

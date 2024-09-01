@@ -4,6 +4,14 @@
         "location": "/home/some_user/Documents/Studium"
     },
     {
+        "name": "developing",
+        "location": "/home/some_user/Code/pyting"
+    },
+    {
+        "name": "looping",
+        "location": "/home/some_user/looping"
+    },
+    {
         "name": "dev_rust",
         "location": "/home/some_user/Code/rust"
     },

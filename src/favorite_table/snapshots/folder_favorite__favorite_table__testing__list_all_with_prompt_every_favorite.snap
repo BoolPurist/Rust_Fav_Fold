@@ -1,0 +1,9 @@
+---
+source: src/favorite_table/mod.rs
+expression: actual
+---
+1  studium     /home/some_user/Documents/Studium
+2  developing  /home/some_user/Code/pyting
+3  looping     /home/some_user/looping
+4  dev_rust    /home/some_user/Code/rust
+5  proc_macro  /home/some_user/Code/rust/proc-macro-workshop

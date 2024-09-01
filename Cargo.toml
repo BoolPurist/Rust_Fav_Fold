@@ -10,10 +10,14 @@ directories = "4.0.1"
 colored = "2.0.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+# Used to expand paths with tilde to their absolute version. 
+# The expansion is done in the subcommand get where the check of existence is buggy with tilde. 
 shellexpand = "3.0.0"
 
 log = "0.4.22"
 env_logger = "0.11.5"
+derive_more = { version = "1.0.0", default-features = false, features = ["as_ref", "deref", "from", "into", "display"] }
+thiserror = "1.0.63"
 
 [dev-dependencies]
 insta = "1.39.0"

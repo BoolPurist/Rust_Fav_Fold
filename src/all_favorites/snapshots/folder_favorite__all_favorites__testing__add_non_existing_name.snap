@@ -1,6 +1,6 @@
 ---
 source: src/all_favorites/mod.rs
-expression: actual
+expression: given_data
 ---
 AllFavorites(
     [
@@ -26,6 +26,14 @@ AllFavorites(
             ),
             location: NonEmptyText(
                 "/home/some_user/Code/rust/proc-macro-workshop",
+            ),
+        },
+        FavoriteFolderPath {
+            name: NonEmptyText(
+                "new_added",
+            ),
+            location: NonEmptyText(
+                "~/some_data",
             ),
         },
     ],

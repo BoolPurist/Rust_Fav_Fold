@@ -6,18 +6,18 @@ AllFavorites(
     [
         FavoriteFolderPath {
             name: NonEmptyText(
-                "studium",
+                "developing",
             ),
             location: NonEmptyText(
-                "/home/some_user/Documents/Studium",
+                "/home/some_user/Code/pyting",
             ),
         },
         FavoriteFolderPath {
             name: NonEmptyText(
-                "proc_macro",
+                "looping",
             ),
             location: NonEmptyText(
-                "/home/some_user/Code/rust/proc-macro-workshop",
+                "/home/some_user/looping",
             ),
         },
     ],

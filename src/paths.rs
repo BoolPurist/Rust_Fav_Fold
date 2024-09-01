@@ -3,7 +3,6 @@ use std::error::Error;
 use std::fmt::Display;
 use std::fs;
 use std::path::PathBuf;
-
 #[derive(Debug)]
 pub struct DataDirError(String);
 

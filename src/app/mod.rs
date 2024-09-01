@@ -1,10 +1,10 @@
 use log::error;
 
-use crate::cli_args::GetParams;
 use crate::favorite_folder_record::FavoriteFolderPath;
+use crate::{cli_args::GetParams, favorite_table};
 use std::error::Error;
 
-use crate::{clipboard, data_access, file_access, AppResult};
+use crate::{clipboard, file_access, AppResult};
 
 pub mod console_interaction;
 pub mod term_colors;
@@ -25,54 +25,52 @@ pub fn exit_with_error(message: &dyn Error) {
     std::process::exit(1);
 }
 
-pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
-    let clipboard = get_params.copy_has_clipboard();
+pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult<String> {
     return match get_params.get_name() {
         Some(name_given) => {
-            let (may_found, read_records) = data_access::get_fav(name_given)?;
-
-            match may_found {
-                Some(index) => {
-                    let found = read_records.get(index)
-                    .expect(
-                        "Unexpected error: get_fav function returned an index to found location but out of bound index occurred",
-                    );
-                    put_into_clipboard_or_print(found.path_str(), clipboard)?;
-                }
+            let favorites = file_access::get_favorites()?;
+            let name = name_given.try_into()?;
+            let content = match favorites.get(name) {
+                Some(found) => found.path_str(),
                 None => {
                     return match (get_params.copy_fuzzy(), get_params.copy_ask_number()) {
                         (false, false) => {
-                            Err(format!("No path found for name: {}", name_given).into())
+                            Err(format!("No path found for the name: {}", name_given).into())
                         }
-                        (_, _) => get_all(get_params),
+                        (_, _) => get_all(&get_params),
                     };
                 }
-            }
+            };
 
-            Ok(())
+            Ok(content.to_string())
         }
-        None => get_all(get_params),
+        None => get_all(&get_params),
     };
 
-    fn get_all(get_params: &GetParams) -> AppResult {
-        let mut all_locations = file_access::get_favorites()?;
+    fn get_all(get_params: &GetParams) -> AppResult<String> {
+        let all_locations = file_access::get_favorites()?;
 
-        if let Some(name) = get_params.get_name() {
+        let all_locations = if let Some(name) = get_params.get_name() {
             if get_params.copy_fuzzy() {
-                all_locations.retain(|possible_match| possible_match.get_name().contains(name));
+                let name = name.try_into()?;
+                all_locations.filtered_containing_name(name)
+            } else {
+                all_locations
             }
-        }
+        } else {
+            all_locations
+        };
 
-        draw_table_and_prompt(&all_locations, get_params)?;
+        let content = draw_table_and_prompt(all_locations.as_slice(), get_params)?;
 
-        Ok(())
+        Ok(content)
     }
 }
 
 fn draw_table_and_prompt(
     all_locations: &[FavoriteFolderPath],
     get_params: &GetParams,
-) -> AppResult {
+) -> AppResult<String> {
     if all_locations.is_empty() {
         return Err(
             "No match found for given name or no labels were created so far"
@@ -81,8 +79,7 @@ fn draw_table_and_prompt(
         );
     }
 
-    let clipboard = get_params.copy_has_clipboard();
-    let table = data_access::get_all_fav_table(all_locations, get_params)?;
+    let table = favorite_table::draw_favorite_table(all_locations, get_params.into());
     if get_params.copy_ask_number() {
         println!("{table}");
 
@@ -94,18 +91,13 @@ fn draw_table_and_prompt(
                 let index = index_start_from_one - 1;
                 // function for asking number of user ensures that the index will not
                 // be out of bounds
-                let to_put = all_locations.get(index).unwrap();
+                let to_put = all_locations.get(index).unwrap().path_str().to_string();
 
-                put_into_clipboard_or_print(to_put.path_str(), clipboard)?;
-                Ok(())
+                Ok(to_put)
             }
-            None => {
-                put_into_clipboard_or_print(&table, clipboard)?;
-                Ok(())
-            }
+            None => Ok(table),
         }
     } else {
-        put_into_clipboard_or_print(&table, clipboard)?;
-        Ok(())
+        Ok(table)
     }
 }

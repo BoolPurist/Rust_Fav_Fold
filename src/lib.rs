@@ -15,6 +15,10 @@ pub mod file_access;
 pub mod logging;
 pub mod paths;
 
+mod trimmed_not_empty_text;
+
 use std::error::Error;
+
+pub mod favorite_table;
 
 pub type AppResult<T = ()> = Result<T, Box<dyn Error>>;

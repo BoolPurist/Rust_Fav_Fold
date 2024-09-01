@@ -14,7 +14,7 @@ AllFavorites(
         },
         FavoriteFolderPath {
             name: NonEmptyText(
-                "dev_rust",
+                "other_dev_rust",
             ),
             location: NonEmptyText(
                 "/home/some_user/Code/rust",
