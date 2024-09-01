@@ -2,6 +2,7 @@ use clap::Parser;
 use folder_favorite::{cli_args::CliCommands, clipboard, data_access, AppResult};
 
 use folder_favorite::{app, logging};
+use log::{debug, info};
 
 fn main() {
     logging::set_up_logging();
@@ -21,6 +22,7 @@ fn main() {
 }
 
 fn handle_subcommand(sub_commands: CliCommands) -> AppResult {
+    debug!("Handling subcommand {:?}", sub_commands);
     match sub_commands {
         CliCommands::Set {
             name_favorite,

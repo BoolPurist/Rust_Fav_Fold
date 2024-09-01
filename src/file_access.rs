@@ -1,6 +1,6 @@
 use log::info;
 
-use crate::paths::{self, DataDirError};
+use crate::paths::{self, DataFolderError};
 use crate::{AllFavorites, AppResult};
 use std::error::Error;
 use std::fmt::Display;
@@ -9,7 +9,7 @@ use std::fs;
 #[derive(Debug)]
 pub enum DataIoError {
     Io(std::io::Error),
-    DataDir(DataDirError),
+    DataDir(DataFolderError),
     InvalidAppDataFormat(serde_json::Error),
 }
 
