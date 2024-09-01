@@ -50,14 +50,13 @@ pub fn rename_fav(name: &str, new_name: &str) -> AppResult {
 }
 
 pub fn remove_from_fav(name: &str) -> AppResult {
-    let mut records = file_access::get_favorites()?;
-    match find_by_name(&records, name) {
-        Some(to_delete) => {
-            records.remove(to_delete);
-            file_access::save_favorites(records)?;
-            Ok(())
-        }
-        None => Err(format!("No favorite with name {} to be deleted", name))?,
+    let records = file_access::get_favorites()?;
+    let mut favorites = AllFavorites::new(records);
+    if favorites.remove_with_name(name) {
+        file_access::save_favorites(favorites.into())?;
+        Ok(())
+    } else {
+        Err(format!("No favorite with name {} to be deleted", name).into())
     }
 }
 

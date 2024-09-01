@@ -1,0 +1,20 @@
+---
+source: src/all_favorites/mod.rs
+expression: actual
+---
+AllFavorites(
+    [
+        FavoriteFolderPath {
+            name: "studium",
+            path: "/home/some_user/Documents/Studium",
+        },
+        FavoriteFolderPath {
+            name: "dev_rust",
+            path: "/home/some_user/Code/rust",
+        },
+        FavoriteFolderPath {
+            name: "proc_macro",
+            path: "/home/some_user/Code/rust/proc-macro-workshop",
+        },
+    ],
+)

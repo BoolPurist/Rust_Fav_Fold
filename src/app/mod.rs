@@ -1,3 +1,5 @@
+use log::error;
+
 use crate::cli_args::GetParams;
 use crate::favorite_folder_record::FavoriteFolderPath;
 use std::error::Error;
@@ -16,11 +18,13 @@ pub fn put_into_clipboard_or_print(content: &str, clipboard: bool) -> AppResult 
 
     Ok(())
 }
+
 pub fn exit_with_error(message: &dyn Error) {
     let red_msg = term_colors::color_error_msg(&format!("Error: {message}"));
-    eprint!("{red_msg}");
+    error!("{}", red_msg);
     std::process::exit(1);
 }
+
 pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
     let clipboard = get_params.copy_has_clipboard();
     return match get_params.get_name() {
@@ -59,13 +63,13 @@ pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
             }
         }
 
-        darw_table_and_prompt(&all_locations, get_params)?;
+        draw_table_and_prompt(&all_locations, get_params)?;
 
         Ok(())
     }
 }
 
-fn darw_table_and_prompt(
+fn draw_table_and_prompt(
     all_locations: &[FavoriteFolderPath],
     get_params: &GetParams,
 ) -> AppResult {
