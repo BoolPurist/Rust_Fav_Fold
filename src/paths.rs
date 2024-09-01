@@ -3,11 +3,7 @@ use std::path::{Path, PathBuf};
 use thiserror::Error;
 
 pub const fn is_in_debug() -> bool {
-    if cfg!(debug_assertions) {
-        true
-    } else {
-        false
-    }
+    cfg!(debug_assertions)
 }
 
 #[derive(Debug, Error)]

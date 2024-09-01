@@ -8,7 +8,7 @@ test:
 
 # Runs static analyses to improve code quality
 lint:
-    cargo clippy
+    cargo clippy -- -Dwarnings
 
 # Checks if code is formatted correctly 
 format_check:

@@ -37,14 +37,14 @@ pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult<String> {
                         (false, false) => {
                             Err(format!("No path found for the name: {}", name_given).into())
                         }
-                        (_, _) => get_all(&get_params),
+                        (_, _) => get_all(get_params),
                     };
                 }
             };
 
             Ok(content.to_string())
         }
-        None => get_all(&get_params),
+        None => get_all(get_params),
     };
 
     fn get_all(get_params: &GetParams) -> AppResult<String> {

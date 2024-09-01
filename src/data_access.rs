@@ -16,7 +16,7 @@ pub fn rename_fav(name: &NonEmptyText, new_name: NonEmptyText) -> AppResult {
 
     favorites.rename(name, new_name);
 
-    file_access::save_favorites(favorites.into()).map_err(Box::new)?;
+    file_access::save_favorites(favorites).map_err(Box::new)?;
 
     Ok(())
 }

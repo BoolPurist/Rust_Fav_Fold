@@ -7,7 +7,6 @@ use crate::favorite_folder_record::FavoriteFolderPath;
 use shellexpand;
 use std::borrow::Cow;
 use std::path::Path;
-use std::usize;
 
 #[derive(Debug)]
 struct LineNameAndPath {
@@ -123,9 +122,7 @@ fn prepare_drawing(
 fn get_colored_path_if_no_clipboard(raw_path: &str) -> String {
     let expanded = shellexpand::tilde(raw_path);
     let expanded_path = Path::new(expanded.as_ref());
-    let colored = check_if_exits(expanded_path, raw_path);
-
-    colored
+    check_if_exits(expanded_path, raw_path)
 }
 
 fn check_if_exits(path: &Path, to_check_color: &str) -> String {
