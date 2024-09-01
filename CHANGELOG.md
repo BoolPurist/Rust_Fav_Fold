@@ -32,5 +32,5 @@ cat <path_to_favorites.json> | sd "\"path\"" "\"location\"" <path_to_favorites.j
 - New subcommand "Clean". Removes all non existing paths
 
 [Unreleased]: https://github.com/BoolPurist/Rust_Fav_Fold
-[1.2.0]: 
+[2.0.0]: https://github.com/BoolPurist/Rust_Fav_Fold/releases/tag/v2.0.0
 [1.4.4]: https://github.com/BoolPurist/Rust_Fav_Fold/releases/tag/v1.4.3
