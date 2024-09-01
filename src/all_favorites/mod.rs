@@ -120,12 +120,12 @@ mod testing {
 
     const INPUT: &str = include_str!("test_input.json");
     const INPUT_LONGER: &str = include_str!("longer_test_input.json");
-    fn given_intial() -> AllFavorites {
+    fn given_initial() -> AllFavorites {
         let parsed: Vec<FavoriteFolderPath> = serde_json::from_str(INPUT).unwrap();
         AllFavorites::new(parsed)
     }
 
-    fn given_longer_intial() -> AllFavorites {
+    fn given_longer_initial() -> AllFavorites {
         let parsed: Vec<FavoriteFolderPath> = serde_json::from_str(INPUT_LONGER).unwrap();
         AllFavorites::new(parsed)
     }
@@ -137,7 +137,7 @@ mod testing {
             NonEmptyText::unwrap("/home/some_user/Code/rust/proc-macro-workshop"),
         )]);
 
-        let mut given = given_intial();
+        let mut given = given_initial();
         given.clean_all_dangling(|path| {
             let path = path.to_str().unwrap();
             path == "/home/some_user/Documents/Studium" || path == "/home/some_user/Code/rust"
@@ -148,7 +148,7 @@ mod testing {
     #[test]
     fn find_a_path_by_name() {
         fn assert_case(name: &str, expected: Option<usize>) {
-            let given = given_intial();
+            let given = given_initial();
             let actual = given.find_by_name_index(name);
             assert_eq!(expected, actual, "Name: {}", name);
         }
@@ -197,7 +197,7 @@ mod testing {
 
     #[test]
     fn add_non_existing_name() {
-        let mut given_data = given_intial();
+        let mut given_data = given_initial();
         let given = FavoriteFolderPath::new(
             NonEmptyText::unwrap("new_added"),
             NonEmptyText::unwrap("~/some_data"),
@@ -210,8 +210,8 @@ mod testing {
     }
 
     #[test]
-    fn set_exisiting_favorite() {
-        let mut given_data = given_intial();
+    fn set_existing_favorite() {
+        let mut given_data = given_initial();
         let given = FavoriteFolderPath::new(
             NonEmptyText::unwrap("dev_rust"),
             NonEmptyText::unwrap("~/new_some_data"),
@@ -225,7 +225,7 @@ mod testing {
 
     #[test]
     fn filter_for_containing_names() {
-        let given_data = given_longer_intial();
+        let given_data = given_longer_initial();
         let param = NonEmptyText::unwrap("ping");
         let actual = given_data.filtered_containing_name(param);
         insta::assert_debug_snapshot!(actual);
@@ -233,7 +233,7 @@ mod testing {
 
     #[test]
     fn filter_out_all_for_no_matching() {
-        let given_data = given_longer_intial();
+        let given_data = given_longer_initial();
         let param = NonEmptyText::unwrap("xxxx");
         let actual = given_data.filtered_containing_name(param);
         assert!(actual.as_slice().is_empty());
@@ -243,13 +243,13 @@ mod testing {
         old_name: NonEmptyText,
         new_name: NonEmptyText,
     ) -> (AllFavorites, bool) {
-        let mut given = given_intial();
+        let mut given = given_initial();
         let actual = given.rename(&old_name, new_name);
         (given, actual)
     }
 
     fn set_up_and_act_remove(name: NonEmptyText) -> (AllFavorites, bool) {
-        let mut given = given_intial();
+        let mut given = given_initial();
         let actual = given.remove_with_name(&name);
         (given, actual)
     }

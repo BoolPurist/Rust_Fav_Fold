@@ -171,21 +171,22 @@ mod testing {
 
     use super::*;
     const INPUT: &str = include_str!("longer_test_input.json");
-    fn given_intial() -> AllFavorites {
+
+    fn given_initial() -> AllFavorites {
         let parsed: Vec<FavoriteFolderPath> = serde_json::from_str(INPUT).unwrap();
         AllFavorites::new(parsed)
     }
 
     #[test]
     fn list_all_every_favorite() {
-        let given = given_intial();
+        let given = given_initial();
         let actual = draw_without_colors(given.as_slice(), false);
         insta::assert_snapshot!(actual);
     }
 
     #[test]
     fn list_all_with_prompt_every_favorite() {
-        let given = given_intial();
+        let given = given_initial();
         let actual = draw_without_colors(given.as_slice(), true);
         insta::assert_snapshot!(actual);
     }

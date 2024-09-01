@@ -17,7 +17,7 @@ just cli
 
 This command checks for following things
 
-- Does the rust code complie ?
+- Does the rust code compile ?
 - Does the rust code adhere to standard linting rules of clippy ?
 - Do all unit tests pass ?
 - Are there decteable spelling errors ? It focused on low wrong positive errors. 

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2024-09-01
+
 ### Breaking change
 
 - renamed file format: field "path" was renamed to "location".
@@ -30,4 +32,5 @@ cat <path_to_favorites.json> | sd "\"path\"" "\"location\"" <path_to_favorites.j
 - New subcommand "Clean". Removes all non existing paths
 
 [Unreleased]: https://github.com/BoolPurist/Rust_Fav_Fold
+[1.2.0]: 
 [1.4.4]: https://github.com/BoolPurist/Rust_Fav_Fold/releases/tag/v1.4.3
