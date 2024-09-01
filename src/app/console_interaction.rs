@@ -26,7 +26,7 @@ pub fn ask_possible_prompt_for_ask_number(
 }
 
 pub fn read_line_from_user(prompt: &str) -> AppResult<String> {
-    let colored_prompt = term_colors::color_promt_msg(prompt);
+    let colored_prompt = term_colors::color_prompt_msg(prompt);
     print!("{colored_prompt}");
     std::io::stdout().flush()?;
 

@@ -1,6 +1,6 @@
 use colored::*;
 
-pub fn color_promt_msg(to_color: &str) -> String {
+pub fn color_prompt_msg(to_color: &str) -> String {
     to_color.blue().to_string()
 }
 pub fn color_error_msg(to_color: &str) -> String {

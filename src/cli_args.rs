@@ -43,7 +43,7 @@ pub enum CliCommands {
         #[arg(value_parser = parse_trimmed_not_empty)]
         name_favorite: String,
     },
-    /// Removes all non-exisiting paths.
+    /// Removes all non-existing paths.
     #[command(visible_alias = "c")]
     Clean,
     #[command(visible_alias = "p")]
@@ -65,12 +65,12 @@ pub struct GetParams {
     #[arg(short, long)]
     clipboard: bool,
     /// list all names and paths with line numbers. Waits for one line to accept a line number.
-    /// The path of the location with the respective line is then outputed.
+    /// The path of the location with the respective line is then outputted.
     #[arg(short, long)]
     ask_number: bool,
     #[arg(short, long)]
     /// if given name is not found then all paths are listed with a name in which the given name
-    /// occures
+    /// occurs
     fuzzy: bool,
 }
 
@@ -94,7 +94,7 @@ fn parse_trimmed_not_empty(to_parse: &str) -> Result<String, String> {
     let trimmed = to_parse.trim().to_string();
 
     if trimmed.is_empty() {
-        Err("Must not be emtpy or only whitespaces".into())
+        Err("Must not be empty or only whitespaces".into())
     } else {
         Ok(trimmed)
     }

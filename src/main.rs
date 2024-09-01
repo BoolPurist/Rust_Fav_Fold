@@ -8,8 +8,8 @@ fn main() {
     // if any error is comes from the lib crate then the user gets the error displayed as an red
     // text. The program always exits with error code 1 in these cases.
 
-    // Need to check if the program was started as child process to keep set clipbaord alive
-    // for linux
+    // Need to check if the program was started as child process to keep set clipboard alive
+    // for Linux
     if let Err(error) = clipboard::execute_as_possible_daemon_clipboard() {
         app::exit_with_error(&*error);
     }

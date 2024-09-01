@@ -31,7 +31,7 @@ pub fn handle_get_subcommand(get_params: &GetParams) -> AppResult {
                 Some(index) => {
                     let found = read_records.get(index)
                     .expect(
-                        "Unexpected error: get_fav function returned an index to found location but out of bound index occured",
+                        "Unexpected error: get_fav function returned an index to found location but out of bound index occurred",
                     );
                     put_into_clipboard_or_print(found.path_str(), clipboard)?;
                 }

@@ -37,7 +37,7 @@ pub fn rename_fav(name: &str, new_name: &str) -> AppResult {
         .find(|nxt_fav| nxt_fav.get_name() == name)
         .ok_or_else(|| {
             format!(
-                "No favortie path found with name {} for renaming to new_name {}",
+                "No favorite path found with name {} for renaming to new_name {}",
                 name, new_name,
             )
         })?;
