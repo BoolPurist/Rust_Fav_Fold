@@ -14,6 +14,7 @@ pub mod favorite_folder_record;
 pub mod file_access;
 pub mod logging;
 pub mod paths;
+pub mod prelude;
 
 mod trimmed_not_empty_text;
 

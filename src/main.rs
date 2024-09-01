@@ -2,7 +2,7 @@ use clap::Parser;
 use folder_favorite::{cli_args::CliCommands, clipboard, data_access, AppResult};
 
 use folder_favorite::{app, logging};
-use log::{debug, info};
+use log::debug;
 
 fn main() {
     logging::set_up_logging();
