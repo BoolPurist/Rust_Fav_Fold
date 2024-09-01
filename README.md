@@ -62,6 +62,10 @@ some_path     /home/dummy
 another path  /home/awesome
 ```
 
+## Development
+
+See [this document](./CONTRIBUTING.md)
+
 ## License
 
 Licensed under either of
