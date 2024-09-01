@@ -2,7 +2,7 @@
 name = "folder_favorite"
 version = "1.4.3"
 edition = "2021"
-rust = "1.80.1"
+rust-version = "1.75.0"
 
 [dependencies]
 arboard = "3.4.0"
